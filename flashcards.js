@@ -7,7 +7,7 @@
  */
 
 (function(global){ 
-  var flashcards = function(element,datasourcet,config) {
+  var flashcards = function(element) {
     
     return {
       next_card: function() {
