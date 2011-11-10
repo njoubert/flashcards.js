@@ -4,15 +4,19 @@
  *
  * Copyright 2011, Niels Joubert
  *
+ * This uses the Revealing Module pattern.
+ * Do NOT use this pattern if you create lots of objects,
+ * it is for revealing a single module with a public API.
+ * If you create many objects, functions should live on prototypes,
+ * so that you do not duplicate function implementations every time you create an object
  */
 
 (function(global){ 
   var flashcards = function(container, paneA, paneB) {
-    return new Flashcard(container, paneA, paneB);
+    return Flashcard(container, paneA, paneB);
   }
 
-
-  var shuffle = function(o) {
+  var array_shuffle = function(o) {
     for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
     return o;
   };
@@ -20,41 +24,25 @@
 
   var Flashcard = function(container, paneA, paneB) {
     var self = this;
-    this.__ELcontainer = document.getElementById(container);
-    this.__ELpaneA = document.getElementById(paneA);
-    this.__ELpaneB = document.getElementById(paneB);
-    this.__extractor = null;
-    this.__itemA     = null;
-    this.__itemB     = null;
-    this.__shuffle   = true;
+    var __ELcontainer = document.getElementById(container);
+    var __ELpaneA = document.getElementById(paneA);
+    var __ELpaneB = document.getElementById(paneB);
+    var __extractor = null;
+    var __itemA     = null;
+    var __itemB     = null;
+    var __shuffle   = true;
 
-    this.__data = [];
-    this.__current_idx = 0;
+    var __data = [];
+    var __current_idx = 0;
+    var __paneA_visible = false;
+    var __paneB_visible = false;
     
-    this.__paneA_visible = false;
-    this.__paneB_visible = false;
     
-    
-    var toggle_paneA_visibility = function(state) {
-      if (state) {
-        self.__ELpaneA.innerHTML = self.__itemA(self.__data[self.__current_idx]);
-      } else {
-        self.__ELpaneA.innerHTML = "";
-      }
-      self.__paneA_visible = state;
-    }
-    var toggle_paneB_visibility = function(state) {
-      if (state) {
-        self.__ELpaneB.innerHTML = self.__itemB(self.__data[self.__current_idx]);
-      } else {
-        self.__ELpaneB.innerHTML = ""        
-      }      
-      self.__paneB_visible = state;
-    }
-    
-    this.__ELpaneA.onclick = function() {
-      if (self.__paneA_visible) {
-        self.next();
+    //set up event handlers:
+    __ELpaneA.onclick = function() {
+      console.log("clicking")
+      if (__paneA_visible) {
+        next();
         toggle_paneA_visibility(true);
         toggle_paneB_visibility(false);
       } else {
@@ -62,9 +50,9 @@
       }
     }
 
-    this.__ELpaneB.onclick = function() {
-      if (self.__paneB_visible) {
-        self.next();
+    __ELpaneB.onclick = function() {
+      if (__paneB_visible) {
+        next();
         toggle_paneA_visibility(false);
         toggle_paneB_visibility(true);
       } else {
@@ -73,51 +61,83 @@
     }
 
     
-  }
-  
-  Flashcard.prototype.init = function() {
-    if (this.__extractor === null || this.__itemA === null || this.__itemB === null)
-      return this;
-      
-    if (this.__shuffle) {
-      this.__data = shuffle(this.__extractor());
-    } else {
-      this.__data = this.__extractor();
+    var toggle_paneA_visibility = function(state) {
+      if (state) {
+        __ELpaneA.innerHTML = __itemA(__data[__current_idx]);
+      } else {
+        __ELpaneA.innerHTML = "";
+      }
+      __paneA_visible = state;
     }
-    this.__current_idx = -1;
-    this.next();
-    return this;
-  }
-  
-  Flashcard.prototype.data = function(fn) {
-    this.__extractor = fn;
-    return this.init();
-  }
-  
-  Flashcard.prototype.itemA = function(fn) {
-    this.__itemA = fn;
-    return this.init();
-  }
-
-  Flashcard.prototype.itemB = function(fn) {
-    this.__itemB = fn;
-    return this.init();
-  }
-
-  Flashcard.prototype.shuffle = function(b) {
-    this.__shuffle = b;
-    return this.init();
-  }
-  
-  Flashcard.prototype.next = function() {
-    if (this.__current_idx < this.__data.length) {
-      this.__current_idx += 1;
-    } else {
-      this.__current_idx = 0;
+    var toggle_paneB_visibility = function(state) {
+      if (state) {
+        __ELpaneB.innerHTML = __itemB(__data[__current_idx]);
+      } else {
+        __ELpaneB.innerHTML = ""        
+      }      
+      __paneB_visible = state;
     }
     
-  }  
   
+    var init = function() {
+      if (__extractor === null || __itemA === null || __itemB === null)
+        return;
+      
+      if (__shuffle) {
+        __data = array_shuffle(__extractor());
+      } else {
+        __data = __extractor();
+      }
+      toggle_paneA_visibility(false);
+      toggle_paneB_visibility(false);
+      __current_idx = 0;
+      return;
+    }
+  
+    var next = function() {
+      console.log("nexting")
+      if (__current_idx < __data.length-1) {
+        __current_idx += 1;
+      } else {
+        init();
+      }
+    }
+  
+  
+    // Public API:
+  
+    var data = function(fn) {
+      __extractor = fn;
+      init();
+      return this;
+    }
+  
+    var itemA = function(fn) {
+      __itemA = fn;
+      init();
+      return this;
+    }
+
+    var itemB = function(fn) {
+      __itemB = fn;
+      init();
+      return this;
+    }
+
+    var shuffle = function(b) {
+      __shuffle = b;
+      init();
+      return this;
+    }
+    
+    return {
+      data: data,
+      itemA: itemA,
+      itemB: itemB,
+      shuffle: shuffle
+    }
+    
+  }
   
   
   flashcards.VERSION = '0.0.1';
