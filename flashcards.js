@@ -19,6 +19,7 @@
 
 
   var Flashcard = function(container, paneA, paneB) {
+    var self = this;
     this.__ELcontainer = document.getElementById(container);
     this.__ELpaneA = document.getElementById(paneA);
     this.__ELpaneB = document.getElementById(paneB);
@@ -26,17 +27,65 @@
     this.__itemA     = null;
     this.__itemB     = null;
     this.__shuffle   = true;
-    
-    
-    
 
+    this.__data = [];
+    this.__current_idx = 0;
+    
+    this.__paneA_visible = false;
+    this.__paneB_visible = false;
+    
+    
+    var toggle_paneA_visibility = function(state) {
+      if (state) {
+        self.__ELpaneA.innerHTML = self.__itemA(self.__data[self.__current_idx]);
+      } else {
+        self.__ELpaneA.innerHTML = "";
+      }
+      self.__paneA_visible = state;
+    }
+    var toggle_paneB_visibility = function(state) {
+      if (state) {
+        self.__ELpaneB.innerHTML = self.__itemB(self.__data[self.__current_idx]);
+      } else {
+        self.__ELpaneB.innerHTML = ""        
+      }      
+      self.__paneB_visible = state;
+    }
+    
+    this.__ELpaneA.onclick = function() {
+      if (self.__paneA_visible) {
+        self.next();
+        toggle_paneA_visibility(true);
+        toggle_paneB_visibility(false);
+      } else {
+        toggle_paneA_visibility(true);
+      }
+    }
+
+    this.__ELpaneB.onclick = function() {
+      if (self.__paneB_visible) {
+        self.next();
+        toggle_paneA_visibility(false);
+        toggle_paneB_visibility(true);
+      } else {
+        toggle_paneB_visibility(true);
+      }
+    }
+
+    
   }
   
   Flashcard.prototype.init = function() {
     if (this.__extractor === null || this.__itemA === null || this.__itemB === null)
       return this;
       
-      
+    if (this.__shuffle) {
+      this.__data = shuffle(this.__extractor());
+    } else {
+      this.__data = this.__extractor();
+    }
+    this.__current_idx = -1;
+    this.next();
     return this;
   }
   
@@ -59,6 +108,15 @@
     this.__shuffle = b;
     return this.init();
   }
+  
+  Flashcard.prototype.next = function() {
+    if (this.__current_idx < this.__data.length) {
+      this.__current_idx += 1;
+    } else {
+      this.__current_idx = 0;
+    }
+    
+  }  
   
   
   

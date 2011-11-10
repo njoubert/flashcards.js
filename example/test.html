@@ -49,17 +49,16 @@ $(document).ready(function() {
   ]
   
   f1 = flashcards("fc1", "fc1_paneA", "fc1_paneB")
-    .data(function()   { return chinese_characters;})
+    .data(function()   { return chinese_characters.slice(0);})
     .itemA(function(t) { return t[1];})
-    .itemB(function(t) { return t[0] + " : " + t[4];})
+    .itemB(function(t) { return t[0];})
   
     
   f2 = flashcards("fc2", "fc2_paneA", "fc2_paneB")
-    .data(function() { return numbers;})
+    .data(function() { return numbers.slice(0);})
     .itemA(function(t) { return t[0];})
     .itemB(function(t) { return t[1];})
     .shuffle(false)
-    
     
 });
   
