@@ -48,13 +48,13 @@ $(document).ready(function() {
     [9,"nine"]
   ]
   
-  f1 = flashcards("fc1", "fc1_paneA", "fc1_paneB")
+  f1 = flashcards("fc1_paneA", "fc1_paneB")
     .data(function()   { return chinese_characters.slice(0);})
     .itemA(function(t) { return t[1];})
     .itemB(function(t) { return t[0];})
   
     
-  f2 = flashcards("fc2", "fc2_paneA", "fc2_paneB")
+  f2 = flashcards("fc2_paneA", "fc2_paneB")
     .data(function() { return numbers.slice(0);})
     .itemA(function(t) { return t[0];})
     .itemB(function(t) { return t[1];})
@@ -101,8 +101,8 @@ h1 {
   <h1>flashcards.js</h1>
   <div id="fc1" class="fc_container">
     Flashcards 1 : Chinese
-    <div id="fc1_paneA" class="fc_pane"></div>
-    <div id="fc1_paneB" class="fc_pane"></div>
+    <div id="fc1_paneA" class="fc_pane">Click!</div>
+    <div id="fc1_paneB" class="fc_pane">Click!</div>
   </div>
 
   <div id="fc2" class="fc_container">

@@ -12,8 +12,8 @@
  */
 
 (function(global){ 
-  var flashcards = function(container, paneA, paneB) {
-    return Flashcard(container, paneA, paneB);
+  var flashcards = function(paneA, paneB) {
+    return Flashcard(paneA, paneB);
   }
 
   var array_shuffle = function(o) {
@@ -22,60 +22,55 @@
   };
 
 
-  var Flashcard = function(container, paneA, paneB) {
+  var Flashcard = function(paneA, paneB, countPane) {
     var self = this;
-    var __ELcontainer = document.getElementById(container);
     var __ELpaneA = document.getElementById(paneA);
     var __ELpaneB = document.getElementById(paneB);
     var __extractor = null;
     var __itemA     = null;
     var __itemB     = null;
     var __shuffle   = true;
+    var __config    = {
 
+    };
+    
     var __data = [];
     var __current_idx = 0;
     var __paneA_visible = false;
     var __paneB_visible = false;
-    
-    
+    var __onchange = null;
+     
     //set up event handlers:
     __ELpaneA.onclick = function() {
-      console.log("clicking")
       if (__paneA_visible) {
         next();
-        toggle_paneA_visibility(true);
-        toggle_paneB_visibility(false);
+        __paneA_visible = true;
+        __paneB_visible = false;
       } else {
-        toggle_paneA_visibility(true);
+        __paneA_visible = true;
       }
+      redraw();
+      fire_onchange();
     }
 
     __ELpaneB.onclick = function() {
       if (__paneB_visible) {
         next();
-        toggle_paneA_visibility(false);
-        toggle_paneB_visibility(true);
+        __paneB_visible = true;
+        __paneA_visible = false;
       } else {
-        toggle_paneB_visibility(true);
+        __paneB_visible = true;
       }
+      redraw();
+      fire_onchange();
     }
 
+
+    //private functions:
     
-    var toggle_paneA_visibility = function(state) {
-      if (state) {
-        __ELpaneA.innerHTML = __itemA(__data[__current_idx]);
-      } else {
-        __ELpaneA.innerHTML = "";
-      }
-      __paneA_visible = state;
-    }
-    var toggle_paneB_visibility = function(state) {
-      if (state) {
-        __ELpaneB.innerHTML = __itemB(__data[__current_idx]);
-      } else {
-        __ELpaneB.innerHTML = ""        
-      }      
-      __paneB_visible = state;
+    var redraw = function() {
+      __ELpaneA.innerHTML = __paneA_visible ? __itemA(__data[__current_idx]) : ""
+      __ELpaneB.innerHTML = __paneB_visible ? __itemB(__data[__current_idx]) : ""      
     }
     
   
@@ -83,26 +78,26 @@
       if (__extractor === null || __itemA === null || __itemB === null)
         return;
       
-      if (__shuffle) {
-        __data = array_shuffle(__extractor());
-      } else {
-        __data = __extractor();
-      }
-      toggle_paneA_visibility(false);
-      toggle_paneB_visibility(false);
+      __data = __shuffle ? array_shuffle(__extractor()) : __extractor()
+      
       __current_idx = 0;
-      return;
+      __paneA_visible = false;
+      __paneB_visible = false;
+      fire_onchange();
     }
   
     var next = function() {
-      console.log("nexting")
       if (__current_idx < __data.length-1) {
         __current_idx += 1;
       } else {
         init();
       }
     }
-  
+    
+    var fire_onchange = function() {
+      if (__onchange)
+        __onchange(__current_idx,__data.length);
+    }
   
     // Public API:
   
@@ -130,11 +125,28 @@
       return this;
     }
     
+    var config = function(param,val) {
+      __config[param] = val;
+      return this;
+    }
+    var reset = function() {
+      init();
+      return this;
+    }
+    var onchange = function(fn) {
+      __onchange = fn;
+      return this;
+    }
+    
     return {
       data: data,
       itemA: itemA,
       itemB: itemB,
-      shuffle: shuffle
+      shuffle: shuffle,
+      reset: reset,
+      redraw: redraw,
+      config: config,
+      onchange: onchange,
     }
     
   }
