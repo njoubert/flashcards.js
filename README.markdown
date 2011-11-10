@@ -30,12 +30,14 @@ flashcards.js should generate a 2-pane layout, where interacting with a pane dis
 
 ### Where does the data come from?
 
-flashcards.js is content agnostic. It interacts with data through a set of extractor functions working on tuples (where the reified type of a tuple remains unstated). A tuple contains, at the very least, the data for a single flashcard consisting of two items:
+flashcards.js is content agnostic. It interacts with data through a set of extractor functions working on tuples (where the reified type of a tuple remains unstated). A tuple contains, at the very least, the data for a single flashcard consisting of two items. We define the following API:
 
     .data(function() { return <array of tuples> })
     .itemA(function(tuple) { return <unicode string> }) - this string will be displayed in pane A
     .itemB(function(tuple) { return <unicode string> }) - this string will be displayed in pane B
     .shuffle(<boolean>) - shuffle the tuple array before flashcarding?
+    .reset() - simply reset all internal state.
+    .redraw() - redraw the current character. Ideal if you chanced 
 
 *State:*  changing any of these functions will regenerate all internal state. This makes it easy to build a control panel that interacts with this data.
 
@@ -44,7 +46,7 @@ flashcards.js is content agnostic. It interacts with data through a set of extra
     <html>
     <head>
         <script>
-            var f1 = flashcards($("flashcard1"))
+            var f1 = flashcards("flashcard1_paneA","flashcard1_paneB")
                 .data(function() { return [(1,"one"),(2,"two"),(3,"three")]; })
                 .itemA(function(t) { return t[0]; })
                 .itemB(function(t) { return t[1]; })

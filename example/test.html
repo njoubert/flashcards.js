@@ -52,6 +52,9 @@ $(document).ready(function() {
     .data(function()   { return chinese_characters.slice(0);})
     .itemA(function(t) { return t[1];})
     .itemB(function(t) { return t[0];})
+    .onchange(function(idx,tot) {
+      $("#charsleft1").html(tot-idx);
+    })
   
     
   f2 = flashcards("fc2_paneA", "fc2_paneB")
@@ -59,6 +62,9 @@ $(document).ready(function() {
     .itemA(function(t) { return t[0];})
     .itemB(function(t) { return t[1];})
     .shuffle(false)
+    .onchange(function(idx,tot) {
+      $("#charsleft2").html(tot-idx);
+    })
     
 });
   
@@ -94,6 +100,15 @@ h1 {
 #debug {
   font-size: 9pt;
 }
+.charsleft {
+  font-size: 6pt;
+  float: right;
+  position: relative;
+  display:inline;
+  top: -16px;
+  left: -6px;
+  height: 1px;
+}
 </style>
 </head>
 <body>
@@ -103,12 +118,16 @@ h1 {
     Flashcards 1 : Chinese
     <div id="fc1_paneA" class="fc_pane">Click!</div>
     <div id="fc1_paneB" class="fc_pane">Click!</div>
+    <div id="charsleft1" class="charsleft"></div>
+
   </div>
 
   <div id="fc2" class="fc_container">
     Flashcards 2 : Numbers
     <div id="fc2_paneA" class="fc_pane"></div>
     <div id="fc2_paneB" class="fc_pane"></div>    
+    <div id="charsleft2" class="charsleft"></div>
+
   </div>
   <div id="debug"></div>
 </div>
