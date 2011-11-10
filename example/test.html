@@ -17,6 +17,9 @@
 <script type="text/javascript" src="../flashcards.js"></script>
 <script type="text/javascript">
   
+  
+var f1 = null, f2 = null;
+
 $(document).ready(function() {
   $("#debug").html("Running on flashcards.js version " + flashcards.VERSION);
   
@@ -45,33 +48,68 @@ $(document).ready(function() {
     [9,"nine"]
   ]
   
-  var f1 = flashcards($("#flashcards_1").get()[0])
+  f1 = flashcards("fc1", "fc1_paneA", "fc1_paneB")
     .data(function()   { return chinese_characters;})
     .itemA(function(t) { return t[1];})
     .itemB(function(t) { return t[0] + " : " + t[4];})
   
     
-  var f2 = flashcards(document.getElementById("flashcards_2"))
+  f2 = flashcards("fc2", "fc2_paneA", "fc2_paneB")
     .data(function() { return numbers;})
     .itemA(function(t) { return t[0];})
     .itemB(function(t) { return t[1];})
+    .shuffle(false)
     
-  console.log(f1)
-  console.log(f2)
     
 });
   
 </script>
+
+<style>
+h1 {
+  font-size: 64pt;
+  margin-bottom: 20pt;
+}
+#container {
+  position:relative;
+  width: 300px;
+  margin: 0 auto;
+}
+.fc_pane {
+  line-height: 100%;
+  font-size: 65pt;
+  margin-top: 10px;
+  padding-top: 12pt;
+  text-align: center;
+  height: 75pt;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  background: #ddd;
+}
+.fc_container {
+  margin-bottom: 15px;
+}
+#fc1_paneA {
+  font-family:simsun, 隶书, 黑体, Arial, Verdana, sans-serif;  
+}
+#debug {
+  font-size: 9pt;
+}
+</style>
 </head>
 <body>
 <div id="container">
-  <div id="flashcards_1">
-    <div id="flashcards_1_paneA"></div>
-    <div id="flashcards_1_paneB"></div>
+  <h1>flashcards.js</h1>
+  <div id="fc1" class="fc_container">
+    Flashcards 1 : Chinese
+    <div id="fc1_paneA" class="fc_pane"></div>
+    <div id="fc1_paneB" class="fc_pane"></div>
   </div>
-  <div id="flashcards_2">
-    <div id="flashcards_2_paneA"></div>
-    <div id="flashcards_2_paneB"></div>    
+
+  <div id="fc2" class="fc_container">
+    Flashcards 2 : Numbers
+    <div id="fc2_paneA" class="fc_pane"></div>
+    <div id="fc2_paneB" class="fc_pane"></div>    
   </div>
   <div id="debug"></div>
 </div>

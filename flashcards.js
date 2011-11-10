@@ -7,46 +7,56 @@
  */
 
 (function(global){ 
-  var flashcards = function(element) {
-    return new Flashcard(element);
+  var flashcards = function(container, paneA, paneB) {
+    return new Flashcard(container, paneA, paneB);
   }
 
-  var Flashcard = function(element) {
-    rootel = element;
-    extractor = null;
-    itemA     = null;
-    itemB     = null;
-    shuffle   = true;
-    this.init();
+
+  var shuffle = function(o) {
+    for(var j, x, i = o.length; i; j = parseInt(Math.random() * i), x = o[--i], o[i] = o[j], o[j] = x);
+    return o;
+  };
+
+
+  var Flashcard = function(container, paneA, paneB) {
+    this.__ELcontainer = document.getElementById(container);
+    this.__ELpaneA = document.getElementById(paneA);
+    this.__ELpaneB = document.getElementById(paneB);
+    this.__extractor = null;
+    this.__itemA     = null;
+    this.__itemB     = null;
+    this.__shuffle   = true;
+    
+    
+    
+
   }
   
   Flashcard.prototype.init = function() {
-    if (extractor === null || itemA === null || itemB === null)
+    if (this.__extractor === null || this.__itemA === null || this.__itemB === null)
       return this;
       
-    console.log("Initializing flashcards on " + rootel.getAttribute("id"))
-
+      
     return this;
   }
   
   Flashcard.prototype.data = function(fn) {
-    extractor = fn;
-    this.init();
-    return this;
+    this.__extractor = fn;
+    return this.init();
   }
   
   Flashcard.prototype.itemA = function(fn) {
-    itemA = fn;
+    this.__itemA = fn;
     return this.init();
   }
 
   Flashcard.prototype.itemB = function(fn) {
-    itemB = fn;
+    this.__itemB = fn;
     return this.init();
   }
 
   Flashcard.prototype.shuffle = function(b) {
-    shuffle = b;
+    this.__shuffle = b;
     return this.init();
   }
   
