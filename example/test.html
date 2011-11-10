@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+   "http://www.w3.org/TR/html4/loose.dtd">
+
+<html lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>Flashcards.js</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" /> 
+	<meta name="apple-mobile-web-app-capable" content="yes" /> 
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+	<meta name="author" content="Niels Joubert">
+	<link rel="stylesheet" type="text/css" href="reset.css">
+	<!-- Date: 2011-10-19 -->
+	
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+<script type="text/javascript" src="../flashcards.js"></script>
+<script type="text/javascript">
+  
+$(document).ready(function() {
+  $("#debug").html("Running on flashcards.js version " + flashcards.VERSION);
+  
+  var chinese_characters = [
+    ['nǐ',       '你',           'Pr',    false, 'you'],
+    ['hǎo',      '好',           'A',     false, 'good; well; fine; OK'],
+    ['Lù Yǔpíng','陆雨平',         'PN',     true, 'name of chinese reporter'],
+    ['Lìbō',     '力拨',          'PN',     true, 'name of canadian student'],
+    ['ma',       '吗',           'QPt',   false, 'interrogative particle for yes-no answer'],
+    ['wǒ',       '我',           'Pr',    false, 'I; me'],
+    ['hěn',      '很',           'Adv',   false, 'very'],
+    ['ne',       '呢',           'MdPt',  false, 'modal particle for elliptical questions'],
+    ['yě',       '也',           'Adv',   false, 'too; also'],
+    ['Lín Nà',   '林娜',           'PN',   true,  'name of british student']
+  ]
+  
+  var numbers = [
+    [1,"one"],
+    [2,"two"],
+    [3,"three"],
+    [4,"four"],
+    [5,"five"],
+    [6,"six"],
+    [7,"seven"],
+    [8,"eight"],
+    [9,"nine"]
+  ]
+  
+  var f1 = flashcards($("#flashcards_1").get()[0])
+    .data(function()   { return chinese_characters;})
+    .itemA(function(t) { return t[1];})
+    .itemB(function(t) { return t[0] + " : " + t[4];})
+  
+    
+  var f2 = flashcards(document.getElementById("flashcards_2"))
+    .data(function() { return numbers;})
+    .itemA(function(t) { return t[0];})
+    .itemB(function(t) { return t[1];})
+    
+  console.log(f1)
+  console.log(f2)
+    
+});
+  
+</script>
+</head>
+<body>
+<div id="container">
+  <div id="flashcards_1">
+    <div id="flashcards_1_paneA"></div>
+    <div id="flashcards_1_paneB"></div>
+  </div>
+  <div id="flashcards_2">
+    <div id="flashcards_2_paneA"></div>
+    <div id="flashcards_2_paneB"></div>    
+  </div>
+  <div id="debug"></div>
+</div>
+</body>
+</html>
