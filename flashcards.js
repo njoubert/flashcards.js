@@ -1,12 +1,18 @@
+/*!
+ * flashcards.js Javascript Library
+ * https://github.com/njoubert/flashcards.js
+ *
+ * Copyright 2011, Niels Joubert
+ *
+ */
+
 (function(global){ 
-  var flashcards = function(element,id,config) {
+  var flashcards = function(element,datasourcet,config) {
     
     return {
-      that
       next_card: function() {
         
-      }
-      
+      }      
     }
     
   }
