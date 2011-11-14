@@ -52,8 +52,8 @@ $(document).ready(function() {
     .data(function()   { return chinese_characters.slice(0);})
     .itemA(function(t) { return t[1];})
     .itemB(function(t) { return t[0];})
-    .onchange(function(idx,tot) {
-      $("#charsleft1").html(tot-idx);
+    .onchange(function(idx,count,tot) {
+      $("#charsleft1").html(tot-count);
     })
   
     
@@ -62,8 +62,8 @@ $(document).ready(function() {
     .itemA(function(t) { return t[0];})
     .itemB(function(t) { return t[1];})
     .shuffle(false)
-    .onchange(function(idx,tot) {
-      $("#charsleft2").html(tot-idx);
+    .onchange(function(idx,count,tot) {
+      $("#charsleft2").html(tot-count);
     })
     
 });

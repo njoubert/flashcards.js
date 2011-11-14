@@ -30,9 +30,6 @@
     var __itemA     = null;
     var __itemB     = null;
     var __shuffle   = true;
-    var __config    = {
-
-    };
     
     var __data = [];
     var __current_idx = 0;
@@ -96,7 +93,7 @@
     
     var fire_onchange = function() {
       if (__onchange)
-        __onchange(__current_idx,__data.length);
+        __onchange(__data[__current_idx],__current_idx,__data.length);
     }
   
     // Public API:
@@ -125,10 +122,6 @@
       return this;
     }
     
-    var config = function(param,val) {
-      __config[param] = val;
-      return this;
-    }
     var reset = function() {
       init();
       return this;
@@ -145,14 +138,12 @@
       shuffle: shuffle,
       reset: reset,
       redraw: redraw,
-      config: config,
       onchange: onchange,
     }
     
   }
   
-  
-  flashcards.VERSION = '0.0.1';
+  flashcards.VERSION = '0.0.2';
   
   if (global.flashcards) {
     throw new Error("flashcards has already been defined.")
